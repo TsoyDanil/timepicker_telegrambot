@@ -21,6 +21,7 @@ bot.onText(/Выбрать время/, (msg) => {
     for (let i = 0; i < 24; i++){
         timeArray.push([{ text: `${i.toString().padStart(2, '0')}:00`, callback_data: `${i.toString().padStart(2, '0')}:00` }])
     }
+    timeArray.push([ { text: 'Отмена', callback_data: 'cancel' }])
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, 'Выберите время:', {
         reply_markup: {
@@ -31,6 +32,10 @@ bot.onText(/Выбрать время/, (msg) => {
 
 bot.on('callback_query', (query) => {
     const chatId = query.message.chat.id;
-    const chosenTime = query.data;
-    bot.sendMessage(chatId, `Ты выбрал время: ${chosenTime}. Спасибо!`);
+    const data = query.data
+    if (data === 'cancel') {
+        bot.sendMessage(chatId, 'Отменено');
+    } else {
+        bot.sendMessage(chatId, `Выбранное время: ${data}`);
+    }
 });
